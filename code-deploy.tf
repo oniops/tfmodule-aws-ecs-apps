@@ -56,4 +56,7 @@ resource "aws_codedeploy_deployment_group" "this" {
     }
   }
 
+  depends_on = [
+    aws_ecs_service.this
+  ]
 }
