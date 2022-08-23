@@ -39,7 +39,7 @@ resource "aws_codedeploy_deployment_group" "this" {
 
   ecs_service {
     cluster_name = var.cluster_name
-    service_name = concat(aws_ecs_service.this.*.name, [""])[0]
+    service_name = local.service_name
   }
 
   load_balancer_info {
@@ -55,8 +55,5 @@ resource "aws_codedeploy_deployment_group" "this" {
       }
     }
   }
-  depends_on = [
-    aws_ecs_service.this
-  ]
 
 }

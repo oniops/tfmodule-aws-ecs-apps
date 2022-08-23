@@ -59,7 +59,8 @@ resource "aws_ecs_service" "this" {
 
   depends_on = [
     aws_ecr_repository.this,
-    aws_ecs_task_definition.this
+    aws_ecs_task_definition.this,
+    aws_codedeploy_app.this
   ]
 }
 
