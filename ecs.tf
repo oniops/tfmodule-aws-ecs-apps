@@ -1,5 +1,5 @@
 locals {
-  service_name              = var.app_fullname == null ? format("%s-%s", var.context.name_prefix, var.app_name) : var.app_fullname
+  service_name              = var.app_fullname == null ? format("%s-%s-%s", var.context.name_prefix, var.app_name, "ecss") : var.app_fullname
   cloudwatch_log_group_name = var.cloudwatch_log_group_name != null ? var.cloudwatch_log_group_name : format("/ecs/%s", local.service_name)
   task_definition_family    = concat( aws_ecs_task_definition.this.*.family, [""])[0]
   task_definition_revision  = concat( aws_ecs_task_definition.this.*.revision, [""])[0]
