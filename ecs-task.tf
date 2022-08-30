@@ -1,4 +1,5 @@
 locals {
+  task_definition_name = var.app_fullname == null ? format("%s-%s-td", local.name_prefix, var.app_name) : format("%s-td", var.app_fullname)
 
   logConfiguration = var.enable_cloudwatch_log_group ? length(keys(var.logConfiguration.options)) > 0 ? var.logConfiguration : {
     logDriver = "awslogs"
@@ -45,7 +46,7 @@ locals {
 
 resource "aws_ecs_task_definition" "this" {
   count                    = var.delete_service && var.delete_task_definition ? 0 : 1
-  family                   = format("%s-ecs-td", local.service_name)
+  family                   = local.task_definition_name
   requires_compatibilities = var.requires_compatibilities
   network_mode             = "awsvpc"
   task_role_arn            = var.task_role_arn
