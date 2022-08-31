@@ -1,19 +1,21 @@
 locals {
-  account_id       = data.aws_caller_identity.current.account_id
-  alb_listener_arn = var.backend_alb_name != null  ? local.backend_alb_listener_arn : local.frontend_alb_listener_arn
+  account_id           = data.aws_caller_identity.current.account_id
+  alb_listener_arn     = var.backend_alb_name != null  ? local.backend_alb_listener_arn : local.frontend_alb_listener_arn
+  code_deploy_name     = format("%s-cd", local.app_name)
+  code_deploy_grp_name = format("%s-cdg", local.app_name)
 }
 
 resource "aws_codedeploy_app" "this" {
   count            = var.delete_service ? 0 : 1
   compute_platform = "ECS"
-  name             = format("%s-cd", local.service_name)
-  tags             = merge(local.tags, { Name = format("%s-cd", local.service_name) })
+  name             = local.code_deploy_name
+  tags             = merge(local.tags, { Name = local.code_deploy_name) })
 }
 
 resource "aws_codedeploy_deployment_group" "this" {
   count                  = var.delete_service ? 0 : 1
   app_name               = concat( aws_codedeploy_app.this.*.name, [""] )[0]
-  deployment_group_name  = format("%s-cdg", local.service_name)
+  deployment_group_name  = local.code_deploy_grp_name
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"
   service_role_arn       = "arn:aws:iam::${local.account_id}:role/AWSCodeDeployRoleForECS"
 
@@ -55,6 +57,10 @@ resource "aws_codedeploy_deployment_group" "this" {
       }
     }
   }
+
+  tags = merge(local.tags,
+    { Name = local.code_deploy_grp_name }
+  )
 
   depends_on = [
     aws_ecs_service.this

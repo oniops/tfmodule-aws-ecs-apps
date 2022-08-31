@@ -1,5 +1,7 @@
 locals {
-  service_name              = var.app_fullname == null ? format("%s-%s-ecss", local.name_prefix, var.app_name) : var.app_fullname
+  app_name                  = var.app_fullname == null ? format("%s-%s", local.name_prefix, var.app_name) : var.app_fullname
+  service_name              = format("%s-ecss", local.app_name)
+  container_name            = format("%s-ecsc", local.app_name)
   cloudwatch_log_group_name = var.cloudwatch_log_group_name != null ? var.cloudwatch_log_group_name : format("/ecs/%s", local.service_name)
   task_definition_family    = concat( aws_ecs_task_definition.this.*.family, [""])[0]
   task_definition_revision  = concat( aws_ecs_task_definition.this.*.revision, [""])[0]
@@ -29,7 +31,7 @@ resource "aws_ecs_service" "this" {
   dynamic "load_balancer" {
     for_each = local.enable_load_balancer ? [1] : []
     content {
-      container_name   = local.service_name
+      container_name   = local.container_name
       container_port   = var.task_port
       target_group_arn = aws_lb_target_group.blue.arn
     }

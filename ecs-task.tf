@@ -1,5 +1,5 @@
 locals {
-  task_definition_name = var.app_fullname == null ? format("%s-%s-td", local.name_prefix, var.app_name) : format("%s-td", var.app_fullname)
+  task_definition_name = format("%s-td", local.app_name)
 
   logConfiguration = var.enable_cloudwatch_log_group ? length(keys(var.logConfiguration.options)) > 0 ? var.logConfiguration : {
     logDriver = "awslogs"

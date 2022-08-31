@@ -1,5 +1,5 @@
 locals {
-  ecr_name = var.container_image == null ? format("%s-%s-ecr", local.name_prefix, var.app_name) : var.container_image
+  ecr_name = var.container_image == null ? format("%s-ecr", local.app_name) : var.container_image
 }
 
 resource "aws_ecr_repository" "this" {
