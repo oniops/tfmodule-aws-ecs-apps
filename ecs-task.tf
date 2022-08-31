@@ -58,8 +58,6 @@ resource "aws_ecs_task_definition" "this" {
   tags = merge(
     local.tags,
     var.tags,
-    {
-      Name = format("%s-ecs-td", local.service_name)
-    }
+    { Name = local.task_definition_name }
   )
 }
