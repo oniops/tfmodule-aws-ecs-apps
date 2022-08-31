@@ -21,7 +21,7 @@ locals {
   ]
 
   container_definition = {
-    name         = local.service_name
+    name         = local.container_name
     image        = aws_ecr_repository.this.repository_url
     essential    = var.essential
     memory       = var.task_memory
