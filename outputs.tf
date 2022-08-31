@@ -13,6 +13,11 @@ output "ecs_task_definition_id" {
   value       = concat(aws_ecs_task_definition.this.*.id, [""])[0]
 }
 
+output "ecs_task_definition_family" {
+  description = "ID of the ECS Task Definition"
+  value       = concat(aws_ecs_task_definition.this.*.family, [""])[0]
+}
+
 output "ecs_service_id" {
   description = "ID of the ECS Application Service"
   value       = concat(aws_ecs_service.this.*.id, [""])[0]
@@ -21,6 +26,11 @@ output "ecs_service_id" {
 output "ecs_service_name" {
   description = "The name of the ECS Application Service"
   value       = local.service_name
+}
+
+output "ecs_container_name" {
+  description = "The name of the ECS Application Container"
+  value       = local.container_name
 }
 
 output "ecr_name" {
@@ -50,5 +60,10 @@ output "namespace_name" {
 
 output "code_deploy_name" {
   description = "CodeDeploy name"
-  value       = format("%s-cd", local.service_name)
+  value       = local.code_deploy_name
+}
+
+output "code_deploy_grp_name" {
+  description = "CodeDeploy Group name"
+  value       = local.code_deploy_grp_name
 }
