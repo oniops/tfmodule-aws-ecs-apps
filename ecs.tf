@@ -5,7 +5,7 @@ locals {
   cloudwatch_log_group_name = var.cloudwatch_log_group_name != null ? var.cloudwatch_log_group_name : format("/ecs/%s", local.service_name)
   task_definition_family    = concat( aws_ecs_task_definition.this.*.family, [""])[0]
   task_definition_revision  = concat( aws_ecs_task_definition.this.*.revision, [""])[0]
-  task_definition           = local.task_definition_family # format("%s:%s", local.task_definition_family, local.task_definition_revision )
+  task_definition           = format("%s:%s", local.task_definition_family, local.task_definition_revision )
   enable_load_balancer      = var.enable_load_balancer && var.task_port > 0 ? true : false
 
   # from context
