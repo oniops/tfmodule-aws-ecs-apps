@@ -221,6 +221,12 @@ variable "scheduling_strategy" {
   */
 }
 
+variable "health_check_grace_period" {
+  description = "health_check_grace_period_seconds of ECS Service"
+  type        = number
+  default     = 120
+}
+
 variable "desired_count" {
   description = "desired_count of ECS Service"
   type        = number

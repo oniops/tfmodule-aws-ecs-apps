@@ -14,15 +14,16 @@ locals {
 }
 
 resource "aws_ecs_service" "this" {
-  count                   = var.delete_service ? 0 : 1
-  name                    = local.service_name
-  cluster                 = data.aws_ecs_cluster.this.id
-  task_definition         = local.task_definition
-  desired_count           = var.desired_count
-  launch_type             = var.launch_type
-  scheduling_strategy     = var.scheduling_strategy
-  enable_ecs_managed_tags = var.enable_ecs_managed_tags
-  enable_execute_command  = var.enable_execute_command
+  count                             = var.delete_service ? 0 : 1
+  name                              = local.service_name
+  cluster                           = data.aws_ecs_cluster.this.id
+  task_definition                   = local.task_definition
+  desired_count                     = var.desired_count
+  launch_type                       = var.launch_type
+  scheduling_strategy               = var.scheduling_strategy
+  health_check_grace_period_seconds = var.health_check_grace_period
+  enable_ecs_managed_tags           = var.enable_ecs_managed_tags
+  enable_execute_command            = var.enable_execute_command
 
   deployment_controller {
     type = var.deployment_controller
