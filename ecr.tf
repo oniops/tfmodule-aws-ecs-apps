@@ -1,5 +1,6 @@
 locals {
-  ecr_name = var.container_image == null ? format("%s-ecr", local.app_name) : var.container_image
+  ecr_name               = var.container_image == null ? format("%s-ecr", local.app_name) : var.container_image
+  enabled_ecr_encryption = var.ecr_encryption_type != null && var.ecr_kms_key ? true : false
 }
 
 resource "aws_ecr_repository" "this" {
@@ -9,6 +10,14 @@ resource "aws_ecr_repository" "this" {
 
   image_scanning_configuration {
     scan_on_push = var.scan_on_push
+  }
+
+  dynamic "encryption_configuration" {
+    for_each = local.enabled_ecr_encryption ? ["true"] : []
+    content {
+      encryption_type = var.ecr_encryption_type
+      kms_key         = var.ecr_kms_key
+    }
   }
 
   tags = merge(local.tags, {

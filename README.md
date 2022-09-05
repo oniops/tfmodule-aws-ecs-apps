@@ -39,7 +39,8 @@ module "myapp" {
   #
   cloud_map_namespace_id   = "<cloud-map-namespace-id>"
   cloud_map_namespace_name = "<cloud-map-namespace-name>"
-
+  # ECR
+  
 }
 ```
  
