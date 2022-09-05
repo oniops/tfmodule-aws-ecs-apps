@@ -1,6 +1,6 @@
 locals {
   ecr_name               = var.container_image == null ? format("%s-ecr", local.app_name) : var.container_image
-  enabled_ecr_encryption = var.ecr_encryption_type != null && var.ecr_kms_key ? true : false
+  enabled_ecr_encryption = var.ecr_encryption_type != null && var.ecr_kms_key != null ? true : false
 }
 
 resource "aws_ecr_repository" "this" {
