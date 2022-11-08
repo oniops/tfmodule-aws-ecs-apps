@@ -410,3 +410,9 @@ variable "ecr_kms_key" {
 
 # CodeDeploy
 variable "deploy_wait_time" { default = 0 }
+
+variable "task_ephemeral_storage" {
+  description = "To allocate an increased amount of ephemeral storage space for a Fargate task"
+  type        = number
+  default     = 20
+}

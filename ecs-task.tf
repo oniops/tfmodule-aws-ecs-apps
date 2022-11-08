@@ -33,6 +33,10 @@ locals {
     ulimits      = toset(var.ulimits)
     mountPoints  = toset(var.mountPoints)
 
+    ephemeral_storage = {
+      size_in_gib = var.task_ephemeral_storage
+    }
+
     logConfiguration = local.logConfiguration
 
     linuxParameters = {
