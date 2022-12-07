@@ -402,6 +402,12 @@ variable "ecr_encryption_type" {
   default     = null
 }
 
+variable "ecr_image_limit" {
+  description = "ECR docker image limit count."
+  type        = number
+  default     = 0
+}
+
 variable "ecr_kms_key" {
   description = "The ARN of the KMS key to use when encryption_type is KMS. If not specified, uses the default AWS managed key for ECR."
   type        = string

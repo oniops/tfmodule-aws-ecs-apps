@@ -24,3 +24,24 @@ resource "aws_ecr_repository" "this" {
     Name = local.ecr_name
   })
 }
+
+resource "aws_ecr_lifecycle_policy" "this" {
+  count      = var.ecr_image_limit > 0 ? 1 : 0
+  repository = aws_ecr_repository.this.name
+  policy     = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description  = format("keep last %s images", var.ecr_image_limit)
+        action       = {
+          type = "expire"
+        }
+        selection = {
+          tagStatus   = "any"
+          countType   = "imageCountMoreThan"
+          countNumber = var.ecr_image_limit
+        }
+      }
+    ]
+  })
+}
