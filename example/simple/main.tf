@@ -13,13 +13,12 @@ module "ctx" {
 }
 
 locals {
-  app_name             = "symple"
-  project              = module.ctx.project
-  name_prefix          = module.ctx.name_prefix
-  tags                 = module.ctx.tags
-  ecs_task_role_name   = format("%s%s", local.project, replace(title( format("%s-EcsTaskRole", local.app_name) ), "-", "" ))
-  ecs_task_policy_name = format("%s%s", local.project, replace(title( format("%s-EcsTaskPolicy", local.app_name) ), "-", "" ))
-  sg_name              = format("%s-%s-sg", local.name_prefix, local.app_name)
+  app_name           = "simple"
+  project            = module.ctx.project
+  name_prefix        = module.ctx.name_prefix
+  tags               = module.ctx.tags
+  ecs_task_role_name = format("%s%s", local.project, replace(title( format("%s-EcsTaskRole", local.app_name) ), "-", "" ))
+  sg_name            = format("%s-%s-sg", local.name_prefix, local.app_name)
 }
 
 resource "aws_iam_role" "task_role" {
@@ -33,7 +32,7 @@ resource "aws_security_group" "this" {
   tags = merge(local.tags, { Name = local.sg_name })
 }
 
-module "symple" {
+module "simple" {
   # source  = "git::https://code.bespinglobal.com/scm/op/tfmodule-aws-ecs-apps.git"
   source  = "../../"
   context = module.ctx.context
@@ -44,16 +43,19 @@ module "symple" {
   task_cpu                 = 256
   task_memory              = 512
   task_port                = 8080
+  listener_port            = 8083
   desired_count            = 1
   environments             = []
   retention_in_days        = 90
   task_role_arn            = aws_iam_role.task_role.arn
-  #
+  # VPC
   vpc_id                   = data.aws_vpc.this.id
   subnets                  = data.aws_subnets.app.ids
   backend_alb_name         = format("%s-backend-alb", local.name_prefix)
   security_group_ids       = [aws_security_group.this.id]
   enable_service_discovery = false
+  # ECR
+  ecr_image_limit          = 30
 
-  depends_on               = [aws_iam_role.task_role]
+  depends_on = [aws_iam_role.task_role]
 }

@@ -37,8 +37,8 @@ resource "aws_ecr_lifecycle_policy" "this" {
           type = "expire"
         }
         selection = {
-          tagStatus   = "any"
-          countType   = "imageCountMoreThan"
+          tagStatus   = var.ecr_expire_tag_status
+          countType   = var.ecr_expire_count_type
           countNumber = var.ecr_image_limit
         }
       }
