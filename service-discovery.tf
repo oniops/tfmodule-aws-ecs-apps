@@ -1,5 +1,5 @@
 resource "aws_service_discovery_service" "this" {
-  count = var.delete_service ? 0 : 1
+  count = !var.enable_service_discovery || var.delete_service ? 0 : 1
   name  = var.app_name
 
   dns_config {

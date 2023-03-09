@@ -60,7 +60,7 @@ output "frontend_alb_listener_arn" {
 
 output "namespace_name" {
   description = "cloud_map_namespace_name"
-  value       = "${var.app_name}.${var.cloud_map_namespace_name}"
+  value       = try("${var.app_name}.${var.cloud_map_namespace_name}", "")
 }
 
 output "code_deploy_name" {

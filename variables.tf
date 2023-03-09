@@ -361,14 +361,23 @@ variable "listener_port" {
 }
 
 # CloudMap
+variable "enable_service_discovery" {
+  description = "CloudMap namespace id for Service Discovery"
+  type        = bool
+  default     = true
+}
+
+
 variable "cloud_map_namespace_id" {
   description = "CloudMap namespace id for Service Discovery"
   type        = string
+  default     = null
 }
 
 variable "cloud_map_namespace_name" {
   description = "CloudMap namespace name for Service Discovery"
   type        = string
+  default     = null
 }
 
 # ECR
