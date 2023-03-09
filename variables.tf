@@ -482,10 +482,10 @@ variable "metric_aggregation_type" {
 variable "min_adjustment_magnitude" {
   description = <<EOF
 Minimum number to adjust your scalable dimension as a result of a scaling activity.
-If the adjustment type is PercentChangeInCapacity, the scaling policy changes the scalable dimension of the scalable target by this amount.
+Only if the adjustment type is `PercentChangeInCapacity`, the scaling policy changes the scalable dimension of the scalable target by this amount.
 EOF
   type        = number
-  default     = 1
+  default     = null
 }
 
 variable "cooldown" {
@@ -620,10 +620,10 @@ variable "scaledown_metric_aggregation_type" {
 variable "scaledown_min_adjustment_magnitude" {
   description = <<EOF
 Minimum number to adjust your scalable dimension as a result of a scaling activity.
-If the adjustment type is PercentChangeInCapacity, the scaling policy changes the scalable dimension of the scalable target by this amount.
+Only if the adjustment type is only `PercentChangeInCapacity`, the scaling policy changes the scalable dimension of the scalable target by this amount.
 EOF
   type        = number
-  default     = 1
+  default     = null
 }
 
 variable "scaledown_cooldown" {
