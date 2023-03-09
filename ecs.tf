@@ -46,10 +46,13 @@ resource "aws_ecs_service" "this" {
 
   propagate_tags = var.propagate_tags
 
-  service_registries {
-    registry_arn   = concat(aws_service_discovery_service.this.*.arn, [""])[0]
-    container_name = local.service_name
-    # container_port = var.task_port
+  dynamic "service_registries" {
+    for_each = !var.enable_service_discovery || var.delete_service ? [] : [1]
+    content {
+      registry_arn   = concat(aws_service_discovery_service.this.*.arn, [""])[0]
+      container_name = local.service_name
+      # container_port = var.task_port
+    }
   }
 
   lifecycle {
