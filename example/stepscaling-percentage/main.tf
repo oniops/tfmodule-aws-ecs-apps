@@ -68,21 +68,25 @@ module "cpu_high" {
   metric_aggregation_type  = "Average"
   min_adjustment_magnitude = 1
   step_adjustment          = [
+    # 60 % ~ 70% = no weight
     {
       metric_interval_lower_bound = 0.0
       metric_interval_upper_bound = 10.0
       scaling_adjustment          = 0
     },
+    # 70 % ~ 75% = 10% scale-out
     {
       metric_interval_lower_bound = 10.0
       metric_interval_upper_bound = 15.0
       scaling_adjustment          = 10.0
     },
+    # 75 % ~ 85% = 20% scale-out
     {
       metric_interval_lower_bound = 15.0
       metric_interval_upper_bound = 25.0
       scaling_adjustment          = 20.0
     },
+    # 85% ~ = 30% scale-out
     {
       metric_interval_lower_bound = 25.0
       metric_interval_upper_bound = null
@@ -92,10 +96,10 @@ module "cpu_high" {
 
   # for alarm metric
   metric_name        = "CPUUtilization"
-  evaluation_periods = 2
-  period             = 120
-  threshold          = 60.0
   statistic          = "Average"
+  threshold          = 60.0
+  period             = 120
+  evaluation_periods = 2
 
   tags = local.tags
 
@@ -112,16 +116,19 @@ module "cpu_low" {
   metric_aggregation_type  = "Average"
   min_adjustment_magnitude = 1
   step_adjustment          = [
+    # 30% ~ 40% = -1
     {
       metric_interval_lower_bound = -10.0
       metric_interval_upper_bound = 0.0
-      scaling_adjustment          = -3
+      scaling_adjustment          = -1
     },
+    # 20% ~ 30% = -1
     {
       metric_interval_lower_bound = -20.0
       metric_interval_upper_bound = -10.0
-      scaling_adjustment          = -2
+      scaling_adjustment          = -1
     },
+    #  0% ~ 20% = -1
     {
       metric_interval_lower_bound = null
       metric_interval_upper_bound = -20
@@ -130,11 +137,12 @@ module "cpu_low" {
   ]
 
   # for alarm metric
-  metric_name        = "CPUUtilization"
-  evaluation_periods = 2
-  period             = 60
-  threshold          = 40.0
-  statistic          = "Average"
+  metric_name         = "CPUUtilization"
+  comparison_operator = "LessThanThreshold"
+  threshold           = 40.0
+  period              = 60
+  evaluation_periods  = 2
+  statistic           = "Average"
 
   tags = local.tags
 

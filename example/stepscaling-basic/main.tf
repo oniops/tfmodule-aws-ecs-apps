@@ -68,7 +68,6 @@ module "apple" {
   statistic                = "Average"
   adjustment_type          = "ChangeInCapacity"
   metric_aggregation_type  = "Average"
-  min_adjustment_magnitude = 1
   step_adjustment          = [
     {
       metric_interval_lower_bound = -20.0

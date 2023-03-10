@@ -66,58 +66,63 @@ module "apple" {
   enable_service_discovery = false
   #
   # Scale-Out StepScaling policy
-  step_scaling_name        = "CpuHigh"
+  step_scaling_name        = "cpu-high"
   metric_name              = "CPUUtilization"
   threshold                = 50.0
   period                   = 60
   evaluation_periods       = 2
-  statistic                = "Average"
+  comparison_operator      = "GreaterThanThreshold"
   adjustment_type          = "ChangeInCapacity"
+  statistic                = "Average"
   metric_aggregation_type  = "Average"
   min_adjustment_magnitude = 1
   step_adjustment          = [
     {
-      metric_interval_lower_bound = 0.0
+      metric_interval_lower_bound = null
       metric_interval_upper_bound = 15.0
       scaling_adjustment          = 0
     },
     {
       metric_interval_lower_bound = 15.0
       metric_interval_upper_bound = 25.0
-      scaling_adjustment          = 2
+      scaling_adjustment          = 1
     },
     {
       metric_interval_lower_bound = 25.0
       metric_interval_upper_bound = null
-      scaling_adjustment          = 4
+      scaling_adjustment          = 1
     },
   ]
 
   # Scale-In StepScaling policy
-  scaledown_step_scaling_name        = "CpuLow"
+  scaledown_step_scaling_name        = "cpu-low"
   scaledown_metric_name              = "CPUUtilization"
   scaledown_threshold                = 50.0
+  scaledown_comparison_operator      = "LessThanThreshold"
   scaledown_period                   = 60
   scaledown_evaluation_periods       = 2
   scaledown_statistic                = "Average"
-  scaledown_adjustment_type          = "ChangeInCapacity"
+  scaledown_adjustment_type          = "ExactCapacity"
   scaledown_metric_aggregation_type  = "Average"
   scaledown_min_adjustment_magnitude = 1
   scaledown_step_adjustment          = [
     {
-      metric_interval_lower_bound = 0.0
-      metric_interval_upper_bound = 15.0
-      scaling_adjustment          = 0
+      # 30% ~ 60% = 3
+      metric_interval_lower_bound = -20.0
+      metric_interval_upper_bound = 10.0
+      scaling_adjustment          = 3
     },
     {
-      metric_interval_lower_bound = 15.0
-      metric_interval_upper_bound = 25.0
+      # 20% ~ 30% = 2
+      metric_interval_lower_bound = -30.0
+      metric_interval_upper_bound = -20.0
       scaling_adjustment          = 2
     },
     {
-      metric_interval_lower_bound = 25.0
-      metric_interval_upper_bound = null
-      scaling_adjustment          = 4
+      # 0% ~ 20% = 1
+      metric_interval_lower_bound = null
+      metric_interval_upper_bound = -30.0
+      scaling_adjustment          = 1
     },
   ]
 

@@ -47,13 +47,13 @@ resource "aws_appautoscaling_policy" "this" {
 resource "aws_cloudwatch_metric_alarm" "this" {
   alarm_name          = local.alarm_name
   alarm_description   = local.alarm_description
-  comparison_operator = var.comparison_operator
-  evaluation_periods  = var.evaluation_periods
   metric_name         = var.metric_name
-  period              = var.period
-  namespace           = "AWS/ECS"
-  statistic           = var.statistic
   threshold           = var.threshold
+  period              = var.period
+  evaluation_periods  = var.evaluation_periods
+  comparison_operator = var.comparison_operator
+  statistic           = var.statistic
+  namespace           = "AWS/ECS"
 
   dimensions = {
     ClusterName = var.cluster_name
@@ -61,6 +61,7 @@ resource "aws_cloudwatch_metric_alarm" "this" {
   }
 
   alarm_actions = [aws_appautoscaling_policy.this.arn]
+  ok_actions = []
 
   tags = merge(var.tags,
     { Name = local.alarm_name }
