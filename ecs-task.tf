@@ -23,7 +23,7 @@ locals {
 
   container_definition = {
     name         = local.container_name
-    image        = aws_ecr_repository.this.repository_url
+    image        = local.enable_ecr_repository ? try(aws_ecr_repository.this[0].repository_url, null) : var.repository_url
     essential    = var.essential
     memory       = var.task_memory
     cpu          = var.task_cpu

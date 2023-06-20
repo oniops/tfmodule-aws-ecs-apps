@@ -1,9 +1,11 @@
 locals {
+  enable_ecr_repository  = var.repository_url == null ? true : false
   ecr_name               = var.container_image == null ? format("%s-ecr", local.app_name) : var.container_image
   enabled_ecr_encryption = var.ecr_encryption_type != null && var.ecr_kms_key != null ? true : false
 }
 
 resource "aws_ecr_repository" "this" {
+  count                = local.enable_ecr_repository ? 1 : 0
   name                 = local.ecr_name
   image_tag_mutability = "MUTABLE"
   force_delete         = var.ecr_force_delete_enabled
@@ -26,8 +28,8 @@ resource "aws_ecr_repository" "this" {
 }
 
 resource "aws_ecr_lifecycle_policy" "this" {
-  count      = var.ecr_image_limit > 0 ? 1 : 0
-  repository = aws_ecr_repository.this.name
+  count      = local.enable_ecr_repository && var.ecr_image_limit > 0 ? 1 : 0
+  repository = try(aws_ecr_repository.this[0].name, null)
   policy     = jsonencode({
     rules = [
       {

@@ -39,11 +39,11 @@ output "ecs_container_name" {
 }
 
 output "ecr_name" {
-  value = aws_ecr_repository.this.name
+  value = local.enable_ecr_repository ? try(aws_ecr_repository.this[0].name, "") : ""
 }
 
 output "ecr_repository_url" {
-  value = aws_ecr_repository.this.repository_url
+  value = local.enable_ecr_repository ? try(aws_ecr_repository.this[0].repository_url, "") : var.repository_url
 }
 
 output "target_group_arn" {
