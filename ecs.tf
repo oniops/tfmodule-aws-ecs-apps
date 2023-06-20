@@ -1,7 +1,7 @@
 locals {
-   task_definition_family        = concat( aws_ecs_task_definition.this.*.family, [""])[0]
-   task_definition_revision      = concat( aws_ecs_task_definition.this.*.revision, [""])[0]
-   task_definition               = format("%s:%s", local.task_definition_family, local.task_definition_revision )
+  task_definition_family   = concat( aws_ecs_task_definition.this.*.family, [""])[0]
+  task_definition_revision = concat( aws_ecs_task_definition.this.*.revision, [""])[0]
+  task_definition          = format("%s:%s", local.task_definition_family, local.task_definition_revision )
 }
 
 resource "aws_ecs_service" "this" {
@@ -24,7 +24,7 @@ resource "aws_ecs_service" "this" {
     content {
       container_name   = local.container_name
       container_port   = var.task_port
-      target_group_arn = try(aws_lb_target_group.blue[0].arn, null)
+      target_group_arn = local.enable_default_tg ?  try(aws_lb_target_group.this[0].arn, null) : try(aws_lb_target_group.blue[0].arn, null)
     }
   }
 

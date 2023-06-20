@@ -47,7 +47,7 @@ output "ecr_repository_url" {
 }
 
 output "target_group_arn" {
-  value = try(aws_lb_target_group.blue[0].arn, "")
+  value = local.enable_default_tg ?  try(aws_lb_target_group.this[0].arn, "") : try(aws_lb_target_group.blue[0].arn, "")
 }
 
 output "backend_alb_listener_arn" {

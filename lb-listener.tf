@@ -1,8 +1,3 @@
-locals {
-  enable_backend_alb  = local.enable_code_deploy && var.backend_alb_name != null && var.frontend_alb_name == null
-  enable_frontend_alb = local.enable_code_deploy && var.frontend_alb_name != null && var.backend_alb_name == null
-}
-
 # Create listener to Backend ALB
 resource "aws_lb_listener" "this" {
   count             = local.enable_backend_alb ? 1 : 0
@@ -12,7 +7,7 @@ resource "aws_lb_listener" "this" {
 
   default_action {
     type             = "forward"
-    target_group_arn = try(aws_lb_target_group.blue[0].arn, null)
+    target_group_arn = local.enable_default_tg ? try(aws_lb_target_group.this[0].arn, null) : try(aws_lb_target_group.blue[0].arn, null)
   }
 
   lifecycle {
@@ -27,7 +22,7 @@ resource "aws_lb_listener_rule" "this" {
 
   action {
     type             = "forward"
-    target_group_arn = try(aws_lb_target_group.blue[0].arn, null)
+    target_group_arn = local.enable_default_tg ? try(aws_lb_target_group.this[0].arn, null) : try(aws_lb_target_group.blue[0].arn, null)
   }
 
   dynamic "condition" {

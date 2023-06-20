@@ -9,7 +9,7 @@ data "aws_ecs_cluster" "this" {
 }
 
 data "aws_lb" "this" {
-  count = local.enable_code_deploy ? 1 : 0
+  count = local.enable_load_balancer ? 1 : 0
   name  = var.backend_alb_name != null ? var.backend_alb_name : var.frontend_alb_name
 }
 
