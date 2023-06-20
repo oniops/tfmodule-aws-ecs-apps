@@ -14,7 +14,7 @@ data "aws_lb" "this" {
 }
 
 data "aws_lb_listener" "front" {
-  count             = local.enable_code_deploy && var.frontend_alb_name != null ? 1 : 0
+  count             = local.enable_load_balancer && var.frontend_alb_name != null ? 1 : 0
   load_balancer_arn = try(data.aws_lb.this[0].arn, null)
   port              = 443
 }
