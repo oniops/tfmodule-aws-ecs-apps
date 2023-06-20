@@ -16,7 +16,7 @@ locals {
     }
   }
   # ELB
-  enable_load_balancer      = var.enable_load_balancer && var.task_port > 0 ? true : false
+  enable_load_balancer      = var.enable_code_deploy && var.enable_load_balancer && var.task_port > 0 ? true : false
   backend_alb_listener_arn  = concat(aws_lb_listener.this.*.arn, [""])[0]
   frontend_alb_listener_arn = concat(data.aws_lb_listener.front.*.arn, [""])[0]
 
