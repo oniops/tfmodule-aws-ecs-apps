@@ -1,10 +1,11 @@
 locals {
-  enable_backend_alb = var.enable_code_deploy && var.backend_alb_name != null && var.frontend_alb_name == null
+  enable_backend_alb  = local.enable_code_deploy && var.backend_alb_name != null && var.frontend_alb_name == null
+  enable_frontend_alb = local.enable_code_deploy && var.frontend_alb_name != null && var.backend_alb_name == null
 }
 
 # Create listener to Backend ALB
 resource "aws_lb_listener" "this" {
-  count             = local.enable_code_deploy ? 1 : 0
+  count             = local.enable_backend_alb ? 1 : 0
   load_balancer_arn = try(data.aws_lb.this[0].arn, null)
   protocol          = local.listener_protocol
   port              = var.listener_port
@@ -21,7 +22,7 @@ resource "aws_lb_listener" "this" {
 
 # Add listener rule to Frontend ALB
 resource "aws_lb_listener_rule" "this" {
-  count        = var.frontend_alb_name != null && var.backend_alb_name == null ? 1 : 0
+  count        = local.enable_frontend_alb ? 1 : 0
   listener_arn = try(data.aws_lb_listener.front[0].arn, null)
 
   action {
