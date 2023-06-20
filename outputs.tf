@@ -43,7 +43,7 @@ output "ecr_name" {
 }
 
 output "ecr_repository_url" {
-  value = local.enable_ecr_repository ? try(aws_ecr_repository.this[0].repository_url, "") : var.repository_url
+  value = local.enable_ecr_repository ? try(aws_ecr_repository.this[0].repository_url, "") : var.repository.url
 }
 
 output "target_group_arn" {

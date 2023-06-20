@@ -395,14 +395,11 @@ EOF
 # ECR
 variable "repository" {
   description = "container image repository"
-  type        = map(string)
-  default     = null
-}
-
-variable "repository_url" {
-  description = "container image repository url"
-  type        = string
-  default     = null
+  type        = object({
+    url  = string
+    name = string
+  })
+  default = null
 }
 
 variable "container_image" {
@@ -462,8 +459,8 @@ variable "ecr_kms_key" {
 # CodeDeploy
 variable "enable_code_deploy" {
   description = "Provision AWS CodeDeploy service"
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "deploy_wait_time" { default = 0 }
