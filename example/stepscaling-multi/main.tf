@@ -34,13 +34,10 @@ resource "aws_security_group" "this" {
 }
 
 
-#CloudWatch 평균 CPU 임계값 50% 를 기준으로, 최소 2회 연속 1분간의 평가 기간에 Auto Scaling 그룹의 크기를 확장하는 경보를 생성하고,
-#여기에 대응하는 Auto-Scaling 정책을 아래와 같이 정의할 수 있습니다.
-#
+#CloudWatch 평균 CPU 임계값 50% 를 기준으로, 최소 2회 연속 1분간의 평가 기간에 Auto Scaling 그룹의 크기를 확장하는 경보를 생성하고, 여기에 대응하는 Auto-Scaling 정책을 아래와 같이 정의할 수 있습니다.
 #- Metric 평균 값이 50% 이상이고 65% 미만인 경우 인스턴스 수를 조정하지 않습니다.
 #- Metric 평균 값이 65% 이상이고 75% 미만인 경우 인스턴스 수를 2개 확장합니다.
 #- Metric 평균 값이 75% 이상이면 인스턴스 수를 4개 확장합니다.
-
 
 module "apple" {
   # source  = "git::https://code.bespinglobal.com/scm/op/tfmodule-aws-ecs-apps.git"
@@ -75,7 +72,6 @@ module "apple" {
   adjustment_type          = "ChangeInCapacity"
   statistic                = "Average"
   metric_aggregation_type  = "Average"
-  min_adjustment_magnitude = 1
   step_adjustment          = [
     {
       metric_interval_lower_bound = null
@@ -104,7 +100,6 @@ module "apple" {
   scaledown_statistic                = "Average"
   scaledown_adjustment_type          = "ExactCapacity"
   scaledown_metric_aggregation_type  = "Average"
-  scaledown_min_adjustment_magnitude = 1
   scaledown_step_adjustment          = [
     {
       # 30% ~ 60% = 3

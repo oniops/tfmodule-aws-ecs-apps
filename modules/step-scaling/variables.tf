@@ -56,7 +56,7 @@ Minimum number to adjust your scalable dimension as a result of a scaling activi
 If the adjustment type is PercentChangeInCapacity, the scaling policy changes the scalable dimension of the scalable target by this amount.
 EOF
   type        = number
-  default     = 1
+  default     = null
 }
 
 variable "cooldown" {
