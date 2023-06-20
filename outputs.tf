@@ -58,9 +58,13 @@ output "frontend_alb_listener_arn" {
   value = local.frontend_alb_listener_arn
 }
 
-output "namespace_name" {
+output "cloudwatch_log_group_name" {
+  value = try(aws_cloudwatch_log_group.this.*.name, "")
+}
+
+output "namespace_domain_name" {
   description = "cloud_map_namespace_name"
-  value       = try("${var.app_name}.${var.cloud_map_namespace_name}", "")
+  value       = var.enable_service_discovery ? try(data.aws_service_discovery_dns_namespace.dns[0].name, null) : ""
 }
 
 output "code_deploy_name" {

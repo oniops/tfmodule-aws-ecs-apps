@@ -1,16 +1,4 @@
 ### ECS Cluster
-variable "delete_service" {
-  description = "Delete ecs service and related with"
-  type        = bool
-  default     = false
-}
-
-variable "delete_task_definition" {
-  description = "Delete ecs task-definition"
-  type        = bool
-  default     = false
-}
-
 variable "cluster_name" {
   description = "ecs cluster name"
   type        = string
@@ -360,25 +348,49 @@ variable "listener_port" {
   default     = 8080
 }
 
-# CloudMap
+### CloudMap configuration
+variable "namespace_id" {
+  description = "CloudMap namespace id for Domain based Service Discovery"
+  type        = string
+  default     = null
+}
+
+variable "namespace_domain_name" {
+  description = "CloudMap namespace domain name for Domain based Service Discovery"
+  type        = string
+  default     = null
+}
+
 variable "enable_service_discovery" {
-  description = "CloudMap namespace id for Service Discovery"
+  description = "CloudMap Domain based Service Discovery"
   type        = bool
   default     = true
 }
 
-
-variable "cloud_map_namespace_id" {
-  description = "CloudMap namespace id for Service Discovery"
-  type        = string
-  default     = null
+variable "enable_service_connect" {
+  description = "CloudMap API only Service Discovery "
+  type        = bool
+  default     = false
 }
 
-variable "cloud_map_namespace_name" {
-  description = "CloudMap namespace name for Service Discovery"
-  type        = string
+variable "service_connect_configuration" {
+  type        = any
   default     = null
+  description = <<EOF
+The ECS Service Connect configuration for this service to discover and connect to services, and be discovered by, and connected from, other services within a namespace
+
+  service_connect_configuration = {
+    service = {
+      port_name      = "ecs-sample"
+      client_alias = {
+        port     = 80
+      }
+    }
+  }
+
+EOF
 }
+
 
 # ECR
 variable "container_image" {
@@ -436,6 +448,12 @@ variable "ecr_kms_key" {
 }
 
 # CodeDeploy
+variable "enable_code_deploy" {
+  description = "Provision AWS CodeDeploy service"
+  type    = bool
+  default = true
+}
+
 variable "deploy_wait_time" { default = 0 }
 
 variable "task_ephemeral_storage" {
@@ -720,4 +738,3 @@ EOF
   type        = string
   default     = "Average"
 }
-

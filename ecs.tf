@@ -1,20 +1,10 @@
 locals {
-  app_name                  = var.app_fullname == null ? format("%s-%s", local.name_prefix, var.app_name) : var.app_fullname
-  service_name              = format("%s-ecss", local.app_name)
-  container_name            = format("%s-ecsc", local.app_name)
-  cloudwatch_log_group_name = var.cloudwatch_log_group_name != null ? var.cloudwatch_log_group_name : format("/ecs/%s", local.service_name)
-  task_definition_family    = concat( aws_ecs_task_definition.this.*.family, [""])[0]
-  task_definition_revision  = concat( aws_ecs_task_definition.this.*.revision, [""])[0]
-  task_definition           = format("%s:%s", local.task_definition_family, local.task_definition_revision )
-  enable_load_balancer      = var.enable_load_balancer && var.task_port > 0 ? true : false
-
-  # from context
-  tags        = var.context.tags
-  name_prefix = var.context.name_prefix
+   task_definition_family        = concat( aws_ecs_task_definition.this.*.family, [""])[0]
+   task_definition_revision      = concat( aws_ecs_task_definition.this.*.revision, [""])[0]
+   task_definition               = format("%s:%s", local.task_definition_family, local.task_definition_revision )
 }
 
 resource "aws_ecs_service" "this" {
-  count                             = var.delete_service ? 0 : 1
   name                              = local.service_name
   cluster                           = data.aws_ecs_cluster.this.id
   task_definition                   = local.task_definition
@@ -26,7 +16,7 @@ resource "aws_ecs_service" "this" {
   enable_execute_command            = var.enable_execute_command
 
   deployment_controller {
-    type = var.deployment_controller
+    type = local.enable_code_deploy ? "CODE_DEPLOY" : "ECS"
   }
 
   dynamic "load_balancer" {
@@ -47,11 +37,37 @@ resource "aws_ecs_service" "this" {
   propagate_tags = var.propagate_tags
 
   dynamic "service_registries" {
-    for_each = !var.enable_service_discovery || var.delete_service ? [] : [1]
+    for_each = var.enable_service_discovery ? [1] : []
     content {
       registry_arn   = concat(aws_service_discovery_service.this.*.arn, [""])[0]
       container_name = local.service_name
       # container_port = var.task_port
+    }
+  }
+
+  dynamic "service_connect_configuration" {
+    for_each = var.enable_service_connect ? [local.service_connect_configuration] : []
+
+    content {
+      enabled   = true
+      namespace = try(data.aws_service_discovery_http_namespace.ans[0].arn, null)
+
+      dynamic "service" {
+        for_each = try([service_connect_configuration.value.service], [])
+
+        content {
+          dynamic "client_alias" {
+            for_each = try([service.value.client_alias], [])
+            content {
+              dns_name = try(client_alias.value.dns_name, null)
+              port     = client_alias.value.port
+            }
+          }
+          port_name             = service.value.port_name
+          discovery_name        = try(service.value.discovery_name, null)
+          ingress_port_override = try(service.value.ingress_port_override, null)
+        }
+      }
     }
   }
 
@@ -71,4 +87,3 @@ resource "aws_ecs_service" "this" {
     aws_ecs_task_definition.this,
   ]
 }
-

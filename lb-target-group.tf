@@ -3,10 +3,11 @@ locals {
   tg_name_green      = format("%s-%s-green-tg", var.context.project, var.app_name)
   load_balancer_type = data.aws_lb.this.load_balancer_type
   listener_protocol  = local.load_balancer_type == "application" ? "HTTP" : "TCP"
-  health_check_path  = local.load_balancer_type == "application" ?var.health_check_path : ""
+  health_check_path  = local.load_balancer_type == "application" ? var.health_check_path : ""
 }
 
 resource "aws_lb_target_group" "blue" {
+  count       = local.enable_code_deploy ? 1 : 0
   name        = local.tg_name_blue
   port        = var.task_port
   protocol    = local.listener_protocol
@@ -36,6 +37,7 @@ resource "aws_lb_target_group" "blue" {
 }
 
 resource "aws_lb_target_group" "green" {
+  count       = local.enable_code_deploy ? 1 : 0
   name        = local.tg_name_green
   port        = var.task_port
   protocol    = local.listener_protocol
@@ -57,10 +59,10 @@ resource "aws_lb_target_group" "green" {
     }
   }
 
-  tags = merge(
-    local.tags,
-    { Name = local.tg_name_green }
+  tags = merge(local.tags,
+    {
+      Name = local.tg_name_green
+    }
   )
 
 }
-

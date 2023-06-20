@@ -17,6 +17,7 @@ locals {
     {
       containerPort = var.task_port
       protocol      = "tcp"
+      name          = var.app_name
     }
   ]
 
@@ -49,7 +50,6 @@ locals {
 
 
 resource "aws_ecs_task_definition" "this" {
-  count                    = var.delete_service && var.delete_task_definition ? 0 : 1
   family                   = local.task_definition_name
   requires_compatibilities = var.requires_compatibilities
   network_mode             = "awsvpc"

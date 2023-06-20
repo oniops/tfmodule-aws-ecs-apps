@@ -1,12 +1,9 @@
 locals {
-  code_deploy_name     = format("%s-cd", local.app_name)
-  code_deploy_grp_name = format("%s-cdg", local.app_name)
-  account_id           = data.aws_caller_identity.current.account_id
-  alb_listener_arn     = var.backend_alb_name != null  ? local.backend_alb_listener_arn : local.frontend_alb_listener_arn
+
 }
 
 resource "aws_codedeploy_app" "this" {
-  count            = var.delete_service ? 0 : 1
+  count            = local.enable_code_deploy ? 1 : 0
   compute_platform = "ECS"
   name             = local.code_deploy_name
   tags             = merge(local.tags,
@@ -15,7 +12,7 @@ resource "aws_codedeploy_app" "this" {
 }
 
 resource "aws_codedeploy_deployment_group" "this" {
-  count                  = var.delete_service ? 0 : 1
+  count                  = local.enable_code_deploy ? 1 : 0
   app_name               = concat( aws_codedeploy_app.this.*.name, [""] )[0]
   deployment_group_name  = local.code_deploy_grp_name
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"

@@ -7,6 +7,3 @@ resource "aws_cloudwatch_log_group" "this" {
   }
 }
 
-output "cloudwatch_log_group_name" {
-  value = try(aws_cloudwatch_log_group.this.*.name, "")
-}
