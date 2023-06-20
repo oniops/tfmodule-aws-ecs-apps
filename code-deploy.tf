@@ -1,7 +1,3 @@
-locals {
-
-}
-
 resource "aws_codedeploy_app" "this" {
   count            = local.enable_code_deploy ? 1 : 0
   compute_platform = "ECS"
@@ -49,10 +45,10 @@ resource "aws_codedeploy_deployment_group" "this" {
         listener_arns = [local.alb_listener_arn]
       }
       target_group {
-        name = aws_lb_target_group.blue.name
+        name = try(aws_lb_target_group.blue[0].name, null)
       }
       target_group {
-        name = aws_lb_target_group.green.name
+        name = try(aws_lb_target_group.green[0].name, null)
       }
     }
   }
