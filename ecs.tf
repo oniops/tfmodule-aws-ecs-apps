@@ -11,12 +11,12 @@ resource "aws_ecs_service" "this" {
   desired_count                     = var.desired_count
   launch_type                       = var.launch_type
   scheduling_strategy               = var.scheduling_strategy
-  health_check_grace_period_seconds = var.health_check_grace_period
+  health_check_grace_period_seconds = local.enable_code_deploy ? var.health_check_grace_period : null
   enable_ecs_managed_tags           = var.enable_ecs_managed_tags
   enable_execute_command            = var.enable_execute_command
 
   deployment_controller {
-    type = local.enable_code_deploy ? "CODE_DEPLOY" : "ECS"
+    type = local.enable_code_deploy ? "CODE_DEPLOY" : var.deployment_controller
   }
 
   dynamic "load_balancer" {
@@ -24,7 +24,7 @@ resource "aws_ecs_service" "this" {
     content {
       container_name   = local.container_name
       container_port   = var.task_port
-      target_group_arn = aws_lb_target_group.blue.arn
+      target_group_arn = try(aws_lb_target_group.blue[0].arn, null)
     }
   }
 

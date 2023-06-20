@@ -1,7 +1,7 @@
 locals {
   tg_name_blue       = format("%s-%s-blue-tg", var.context.project, var.app_name)
   tg_name_green      = format("%s-%s-green-tg", var.context.project, var.app_name)
-  load_balancer_type = data.aws_lb.this.load_balancer_type
+  load_balancer_type = local.enable_code_deploy ? try(data.aws_lb.this[0].load_balancer_type, "application") : "application"
   listener_protocol  = local.load_balancer_type == "application" ? "HTTP" : "TCP"
   health_check_path  = local.load_balancer_type == "application" ? var.health_check_path : ""
 }

@@ -242,7 +242,7 @@ variable "health_check_grace_period_seconds" {
 variable "deployment_controller" {
   description = "deployment_controller of ECS Service"
   type        = string
-  default     = "CODE_DEPLOY"
+  default     = "ECS"
   /*
   CODE_DEPLOY | ECS
   */

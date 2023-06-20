@@ -4,8 +4,8 @@ locals {
 
 # Create listener to Backend ALB
 resource "aws_lb_listener" "this" {
-  count             = var.backend_alb_name != null && var.frontend_alb_name == null ? 1 : 0
-  load_balancer_arn = data.aws_lb.this.arn
+  count             = local.enable_code_deploy ? 1 : 0
+  load_balancer_arn = try(data.aws_lb.this[0].arn, null)
   protocol          = local.listener_protocol
   port              = var.listener_port
 
