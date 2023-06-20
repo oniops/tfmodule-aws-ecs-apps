@@ -1,22 +1,22 @@
-data "aws_caller_identity" "current" {}
+locals {
+  namespace_domain_name = var.namespace_domain_name != null ? var.namespace_domain_name : var.context.pri_domain
+}
 
+data "aws_caller_identity" "current" {}
 
 data "aws_ecs_cluster" "this" {
   cluster_name = var.cluster_name
 }
 
 data "aws_lb" "this" {
-  name = var.backend_alb_name != null ? var.backend_alb_name : var.frontend_alb_name
+  count = local.enable_code_deploy ? 1 : 0
+  name  = var.backend_alb_name != null ? var.backend_alb_name : var.frontend_alb_name
 }
 
 data "aws_lb_listener" "front" {
-  count             = var.frontend_alb_name != null ? 1 : 0
-  load_balancer_arn = data.aws_lb.this.arn
+  count             = local.enable_code_deploy && var.frontend_alb_name != null ? 1 : 0
+  load_balancer_arn = try(data.aws_lb.this[0].arn, null)
   port              = 443
-}
-
-locals {
-  namespace_domain_name = var.namespace_domain_name != null ? var.namespace_domain_name : var.context.pri_domain
 }
 
 data "aws_service_discovery_dns_namespace" "dns" {
