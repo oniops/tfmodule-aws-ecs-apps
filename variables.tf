@@ -393,6 +393,12 @@ EOF
 
 
 # ECR
+variable "repository" {
+  description = "container image repository"
+  type        = map(string)
+  default     = null
+}
+
 variable "repository_url" {
   description = "container image repository url"
   type        = string

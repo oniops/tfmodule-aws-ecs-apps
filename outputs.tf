@@ -39,7 +39,7 @@ output "ecs_container_name" {
 }
 
 output "ecr_name" {
-  value = local.enable_ecr_repository ? try(aws_ecr_repository.this[0].name, "") : ""
+  value = local.enable_ecr_repository ? try(aws_ecr_repository.this[0].name, "") : local.ecr_name
 }
 
 output "ecr_repository_url" {
