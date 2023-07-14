@@ -10,6 +10,8 @@ resource "aws_lb_listener" "this" {
     target_group_arn = local.enable_default_tg ? try(aws_lb_target_group.this[0].arn, null) : try(aws_lb_target_group.blue[0].arn, null)
   }
 
+  tags = var.tags
+
   lifecycle {
     ignore_changes = [default_action]
   }
@@ -46,4 +48,5 @@ resource "aws_lb_listener_rule" "this" {
   lifecycle {
     ignore_changes = [action]
   }
+
 }
