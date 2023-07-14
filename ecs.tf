@@ -78,7 +78,8 @@ resource "aws_ecs_service" "this" {
     ]
   }
 
-  tags = merge(var.tags,
+  tags = merge(local.tags,
+    var.tags,
     { Name = local.service_name }
   )
 
