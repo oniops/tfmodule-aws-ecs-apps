@@ -210,7 +210,7 @@ variable "scheduling_strategy" {
 }
 
 variable "health_check_grace_period" {
-  description = "health_check_grace_period_seconds of ECS Service"
+  description = "health_check_grace_period_seconds of ECS Service. It is only used when bind to load-balancer"
   type        = number
   default     = 120
 }
