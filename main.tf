@@ -16,8 +16,8 @@ locals {
     }
   }
   # ECR
+  create_ecr_repository     = var.repository != null || var.repository_url != null ? false : true
   repository_url            = var.repository != null ? var.repository.url : var.repository_url
-  create_ecr_repository     = local.repository_url == null ? true : false
   # ELB
   enable_backend_alb        = var.enable_load_balancer && var.backend_alb_name != null && var.frontend_alb_name == null
   enable_frontend_alb       = var.enable_load_balancer && var.frontend_alb_name != null && var.backend_alb_name == null
