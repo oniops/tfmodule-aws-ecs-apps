@@ -402,6 +402,12 @@ variable "repository" {
   default = null
 }
 
+variable "repository_url" {
+  description = "container image repository url"
+  type        = string
+  default = null
+}
+
 variable "container_image" {
   description = "container image"
   type        = string
