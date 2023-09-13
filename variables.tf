@@ -41,6 +41,22 @@ variable "task_role_arn" {
 
 # ECS Tasks
 
+# https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#runtime-platform
+variable "operating_system_family" {
+  description = <<EOF
+OS runtime platform
+The valid values are LINUX, WINDOWS_SERVER_2019_FULL, WINDOWS_SERVER_2019_CORE, WINDOWS_SERVER_2022_FULL, and WINDOWS_SERVER_2022_CORE.
+EOF
+  type        = string
+  default     = "LINUX"
+}
+
+variable "cpu_architecture" {
+  description = "The valid values are X86_64 and ARM64."
+  type        = string
+  default     = "X86_64"
+}
+
 variable "essential" {
   description = "essential"
   type        = bool
@@ -405,7 +421,7 @@ variable "repository" {
 variable "repository_url" {
   description = "container image repository url"
   type        = string
-  default = null
+  default     = null
 }
 
 variable "container_image" {

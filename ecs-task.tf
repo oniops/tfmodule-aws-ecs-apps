@@ -49,6 +49,7 @@ locals {
 }
 
 
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition
 resource "aws_ecs_task_definition" "this" {
   family                   = local.task_definition_name
   requires_compatibilities = var.requires_compatibilities
@@ -58,6 +59,15 @@ resource "aws_ecs_task_definition" "this" {
   cpu                      = var.task_cpu
   memory                   = var.task_memory
   container_definitions    = "[${local.container_definition_json}]"
+
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition#runtime_platform
+  dynamic "runtime_platform" {
+    for_each = var.cpu_architecture == "ARM64" ? [1] : []
+    content {
+      operating_system_family = var.operating_system_family
+      cpu_architecture        = var.cpu_architecture
+    }
+  }
 
   tags = merge(
     local.tags,
