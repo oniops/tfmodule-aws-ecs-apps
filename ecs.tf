@@ -9,7 +9,7 @@ resource "aws_ecs_service" "this" {
   cluster                           = data.aws_ecs_cluster.this.id
   task_definition                   = local.task_definition
   desired_count                     = var.desired_count
-  # launch_type                       = var.launch_type
+  launch_type                       = var.launch_type
   scheduling_strategy               = var.scheduling_strategy
   health_check_grace_period_seconds = local.enable_load_balancer ? var.health_check_grace_period : null
   enable_ecs_managed_tags           = var.enable_ecs_managed_tags
@@ -20,8 +20,8 @@ resource "aws_ecs_service" "this" {
     for_each = { for k, v in var.capacity_provider_strategy : k => v if var.capacity_provider_strategy != null }
 
     content {
-      capacity_provider = capacity_provider_strategy.value.capacity_provider
       base              = try(capacity_provider_strategy.value.base, null)
+      capacity_provider = capacity_provider_strategy.value.capacity_provider
       weight            = try(capacity_provider_strategy.value.weight, null)
     }
   }
