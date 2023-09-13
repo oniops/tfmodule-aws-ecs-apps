@@ -234,9 +234,9 @@ variable "tags" {
 # ECS Service
 
 variable "launch_type" {
-  description = "launch_type of ECS Service. values are FARGATE, EC2"
+  description = "launch_type of ECS Service. values are EC2, FARGATE, EXTERNAL"
   type        = string
-  default     = "FARGATE"
+  default     = null
 }
 
 variable "scheduling_strategy" {
