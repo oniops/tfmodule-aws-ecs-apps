@@ -57,6 +57,29 @@ variable "cpu_architecture" {
   default     = "X86_64"
 }
 
+variable "capacity_provider_strategy" {
+  description = <<EOF
+Capacity provider strategies to use for the service. Can be one or more
+
+  capacity_provider_strategy = {
+    one = {
+      capacity_provider = "FARGATE"
+      weight = 0
+      base = 1
+    }
+    two = {
+      capacity_provider = "FARGATE_SPOT"
+      weight = 0
+      base = 100
+    }
+  }
+
+EOF
+
+  type    = any
+  default = {}
+}
+
 variable "essential" {
   description = "essential"
   type        = bool
