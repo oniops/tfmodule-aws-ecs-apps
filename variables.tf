@@ -172,6 +172,12 @@ variable "ulimits" {
   */
 }
 
+variable "readonlyRootFilesystem" {
+  description = "readonlyRootFilesystem"
+  type        = bool
+  default     = false
+}
+
 variable "mountPoints" {
   description = "mountPoints"
   type        = list(any)

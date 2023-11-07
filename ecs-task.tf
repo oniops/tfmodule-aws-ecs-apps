@@ -33,6 +33,7 @@ locals {
     secrets      = toset(var.secrets)
     ulimits      = toset(var.ulimits)
     mountPoints  = toset(var.mountPoints)
+    readonlyRootFilesystem = var.readonlyRootFilesystem
 
     ephemeral_storage = {
       size_in_gib = var.task_ephemeral_storage
