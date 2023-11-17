@@ -1,11 +1,12 @@
 locals {
-  tg_name_blue       = format("%s-%s-blue-tg", var.context.project, var.app_name)
-  tg_name_green      = format("%s-%s-green-tg", var.context.project, var.app_name)
-  tg_name_default    = format("%s-%s-tg", var.context.project, var.app_name)
-  load_balancer_type = try(data.aws_lb.this[0].load_balancer_type, "application")
-  listener_protocol  = local.load_balancer_type == "application" ? "HTTP" : "TCP"
-  health_check_path  = var.health_check_path # local.load_balancer_type == "application" ? var.health_check_path : ""
-  enable_default_tg  = local.enable_load_balancer && var.enable_service_connect && !local.enable_code_deploy
+  tg_name_blue          = format("%s-%s-blue-tg", var.context.project, var.app_name)
+  tg_name_green         = format("%s-%s-green-tg", var.context.project, var.app_name)
+  tg_name_default       = format("%s-%s-tg", var.context.project, var.app_name)
+  load_balancer_type    = try(data.aws_lb.this[0].load_balancer_type, "application")
+  listener_protocol     = local.load_balancer_type == "application" ? "HTTP" : "TCP"
+  health_check_path     = var.health_check_path # local.load_balancer_type == "application" ? var.health_check_path : ""
+  health_check_protocol = var.health_check_protocol != null ? var.health_check_protocol : local.listener_protocol
+  enable_default_tg     = local.enable_load_balancer && var.enable_service_connect && !local.enable_code_deploy
 }
 
 resource "aws_lb_target_group" "this" {
@@ -18,6 +19,7 @@ resource "aws_lb_target_group" "this" {
 
   health_check {
     enabled             = true
+    protocol            = local.health_check_protocol
     path                = var.health_check_path
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
@@ -48,6 +50,7 @@ resource "aws_lb_target_group" "blue" {
 
   health_check {
     enabled             = true
+    protocol            = local.health_check_protocol
     path                = var.health_check_path
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
@@ -78,6 +81,7 @@ resource "aws_lb_target_group" "green" {
 
   health_check {
     enabled             = true
+    protocol            = local.health_check_protocol
     path                = local.health_check_path
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold

@@ -362,6 +362,12 @@ variable "health_check_path" {
   default     = "/health"
 }
 
+variable "health_check_protocol" {
+  description = "Destination for the health check protol. Required for HTTP / TCP"
+  type        = string
+  default     = null
+}
+
 variable "healthy_threshold" {
   description = "Number of consecutive health checks successes required before considering an unhealthy target healthy."
   type        = number
