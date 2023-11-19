@@ -1,6 +1,6 @@
 module "StepScale" {
   source                   = "./modules/step-scaling"
-  count                    = var.step_scaling_name != null && length(var.step_adjustment) > 0 ? 1 : 0
+  count                    = var.create_ecs_service && var.step_scaling_name != null && length(var.step_adjustment) > 0 ? 1 : 0
   #
   cluster_name             = var.cluster_name
   service_name             = local.service_name

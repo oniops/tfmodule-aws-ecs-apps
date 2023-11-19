@@ -1,5 +1,10 @@
+locals {
+  code_deploy_name          = format("%s-cd", local.app_name)
+  code_deploy_grp_name      = format("%s-cdg", local.app_name)
+}
+
 resource "aws_codedeploy_app" "this" {
-  count            = local.enable_code_deploy ? 1 : 0
+  count            = var.create_ecs_service && local.deployment_controller == "CODE_DEPLOY" ? 1 : 0
   compute_platform = "ECS"
   name             = local.code_deploy_name
   tags             = merge(local.tags,
@@ -8,7 +13,7 @@ resource "aws_codedeploy_app" "this" {
 }
 
 resource "aws_codedeploy_deployment_group" "this" {
-  count                  = local.enable_code_deploy ? 1 : 0
+  count                  = var.create_ecs_service && local.deployment_controller == "CODE_DEPLOY" ? 1 : 0
   app_name               = concat( aws_codedeploy_app.this.*.name, [""] )[0]
   deployment_group_name  = local.code_deploy_grp_name
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"

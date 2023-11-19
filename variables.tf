@@ -1,3 +1,8 @@
+variable "create_ecs_service" {
+  type    = bool
+  default = true
+}
+
 ### ECS Cluster
 variable "cluster_name" {
   description = "ecs cluster name"
@@ -175,7 +180,7 @@ variable "ulimits" {
 variable "readonlyRootFilesystem" {
   description = "readonlyRootFilesystem"
   type        = bool
-  default     = false
+  default     = null
 }
 
 variable "mountPoints" {
@@ -254,6 +259,12 @@ variable "scheduling_strategy" {
   */
 }
 
+variable "deployment_controller" {
+  description = "Type of deployment controller. Valid values: CODE_DEPLOY, ECS, EXTERNAL."
+  type        = string
+  default     = "CODE_DEPLOY"
+}
+
 variable "health_check_grace_period" {
   description = "health_check_grace_period_seconds of ECS Service. It is only used when bind to load-balancer"
   type        = number
@@ -282,15 +293,6 @@ variable "health_check_grace_period_seconds" {
   description = "health_check_grace_period_seconds of ECS Service"
   type        = number
   default     = 360
-}
-
-variable "deployment_controller" {
-  description = "deployment_controller of ECS Service"
-  type        = string
-  default     = "ECS"
-  /*
-  CODE_DEPLOY | ECS
-  */
 }
 
 variable "enable_load_balancer" {
@@ -511,13 +513,6 @@ variable "ecr_kms_key" {
   description = "The ARN of the KMS key to use when encryption_type is KMS. If not specified, uses the default AWS managed key for ECR."
   type        = string
   default     = null
-}
-
-# CodeDeploy
-variable "enable_code_deploy" {
-  description = "Provision AWS CodeDeploy service"
-  type        = bool
-  default     = true
 }
 
 variable "deploy_wait_time" { default = 0 }

@@ -1,6 +1,6 @@
 # Create listener to Backend ALB
 resource "aws_lb_listener" "this" {
-  count             = local.enable_backend_alb ? 1 : 0
+  count             = var.create_ecs_service && local.enable_backend_alb ? 1 : 0
   load_balancer_arn = try(data.aws_lb.this[0].arn, null)
   protocol          = local.listener_protocol
   port              = var.listener_port
@@ -19,7 +19,7 @@ resource "aws_lb_listener" "this" {
 
 # Add listener rule to Frontend ALB
 resource "aws_lb_listener_rule" "this" {
-  count        = local.enable_frontend_alb ? 1 : 0
+  count        = var.create_ecs_service && local.enable_frontend_alb ? 1 : 0
   listener_arn = try(data.aws_lb_listener.front[0].arn, null)
 
   action {
