@@ -82,6 +82,7 @@ resource "aws_lb_target_group" "green" {
     enabled             = true
     protocol            = local.health_check_protocol
     path                = local.health_check_path
+    matcher             = var.health_check_matcher
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
   }
