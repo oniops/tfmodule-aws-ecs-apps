@@ -30,7 +30,7 @@ resource "aws_ecs_service" "this" {
   }
 
   deployment_controller {
-    type = local.deployment_controller
+    type = local.enable_load_balancer ? local.deployment_controller : null
   }
 
   dynamic "load_balancer" {

@@ -260,7 +260,7 @@ variable "scheduling_strategy" {
 }
 
 variable "deployment_controller" {
-  description = "Type of deployment controller. Valid values: CODE_DEPLOY, ECS, EXTERNAL."
+  description = "Type of deployment controller. Valid values: CODE_DEPLOY, ECS, EXTERNAL"
   type        = string
   default     = "CODE_DEPLOY"
 }
