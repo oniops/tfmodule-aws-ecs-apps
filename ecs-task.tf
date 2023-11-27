@@ -8,18 +8,15 @@ locals {
       awslogs-region        = var.context.region
       awslogs-stream-prefix = local.service_name
     }
-  } : {
-    logDriver = null
-    options   = {}
-  }
+  } : null
 
-  portMappings = length(var.portMappings) > 0 ? var.portMappings : [
+  portMappings = length(var.portMappings) > 0 ? var.portMappings : var.task_port > 0 ? [
     {
       containerPort = var.task_port
       protocol      = "tcp"
       name          = var.app_name
     }
-  ]
+  ] : []
 
   container_definition = [
     {
