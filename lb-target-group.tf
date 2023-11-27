@@ -40,7 +40,7 @@ resource "aws_lb_target_group" "this" {
 }
 
 resource "aws_lb_target_group" "blue" {
-  count       = var.create_ecs_service && local.deployment_controller == "CODE_DEPLOY" ? 1 : 0
+  count       = var.create_ecs_service && local.enable_load_balancer && local.deployment_controller == "CODE_DEPLOY" ? 1 : 0
   name        = local.tg_name_blue
   port        = var.task_port
   protocol    = local.listener_protocol
@@ -71,7 +71,7 @@ resource "aws_lb_target_group" "blue" {
 }
 
 resource "aws_lb_target_group" "green" {
-  count       = var.create_ecs_service && local.deployment_controller == "CODE_DEPLOY" ? 1 : 0
+  count       = var.create_ecs_service && local.enable_load_balancer && local.deployment_controller == "CODE_DEPLOY" ? 1 : 0
   name        = local.tg_name_green
   port        = var.task_port
   protocol    = local.listener_protocol
