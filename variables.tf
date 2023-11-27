@@ -332,6 +332,12 @@ variable "frontend_alb_name" {
   default     = null
 }
 
+variable "priority" {
+  description = "ALB listener rule priority"
+  type        = number
+  default     = null
+}
+
 variable "alb_hosts" {
   description = "Frontend ALB routing hostnames"
   type        = list(string)

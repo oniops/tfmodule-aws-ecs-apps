@@ -21,6 +21,7 @@ resource "aws_lb_listener" "this" {
 resource "aws_lb_listener_rule" "this" {
   count        = var.create_ecs_service && local.enable_frontend_alb ? 1 : 0
   listener_arn = try(data.aws_lb_listener.front[0].arn, null)
+  priority     = var.priority
 
   action {
     type             = "forward"
