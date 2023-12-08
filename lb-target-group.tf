@@ -9,7 +9,7 @@ locals {
 }
 
 resource "aws_lb_target_group" "this" {
-  count       = var.create_ecs_service && local.deployment_controller == "ECS" ? 1 : 0
+  count       = var.create_ecs_service && local.enable_load_balancer && local.deployment_controller == "ECS" ? 1 : 0
   name        = local.tg_name_default
   port        = var.task_port
   protocol    = local.listener_protocol
