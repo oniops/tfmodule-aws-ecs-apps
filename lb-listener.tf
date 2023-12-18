@@ -46,6 +46,15 @@ resource "aws_lb_listener_rule" "this" {
     }
   }
 
+  dynamic "condition" {
+    for_each = length(var.source_ip) > 0 ? [1] : []
+    content {
+      path_pattern {
+        values = var.source_ip
+      }
+    }
+  }
+
   lifecycle {
     ignore_changes = [action]
   }

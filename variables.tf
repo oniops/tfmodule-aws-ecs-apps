@@ -350,6 +350,12 @@ variable "alb_paths" {
   default     = []
 }
 
+variable "source_ip" {
+  description = "Contains a single values item which is a list of source IP CIDR notations to match. Wildcards are not supported"
+  type        = list(string)
+  default     = []
+}
+
 variable "backend_alb_name" {
   description = "The name of AWS ELB"
   type        = string
