@@ -5,7 +5,7 @@ locals {
   load_balancer_type    = try(data.aws_lb.this[0].load_balancer_type, "application")
   listener_protocol     = local.load_balancer_type == "application" ? "HTTP" : "TCP"
   health_check_protocol = var.health_check_protocol != null ? var.health_check_protocol : local.listener_protocol
-  health_check_path     = local.health_check_protocol == "TCP" ? "" : var.health_check_path
+  health_check_path     = local.health_check_protocol == "TCP" ? null : var.health_check_path
 }
 
 resource "aws_lb_target_group" "this" {
@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "this" {
   health_check {
     enabled             = true
     protocol            = local.health_check_protocol
-    path                = var.health_check_path
+    path                = local.health_check_path
     matcher             = var.health_check_matcher
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
@@ -51,7 +51,7 @@ resource "aws_lb_target_group" "blue" {
   health_check {
     enabled             = true
     protocol            = local.health_check_protocol
-    path                = var.health_check_path
+    path                = local.health_check_path
     matcher             = var.health_check_matcher
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
