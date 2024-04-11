@@ -1,3 +1,8 @@
+variable "create_ecs_service" {
+  type    = bool
+  default = true
+}
+
 ### ECS Cluster
 variable "cluster_name" {
   description = "ecs cluster name"

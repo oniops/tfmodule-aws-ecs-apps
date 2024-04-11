@@ -3,7 +3,7 @@ locals {
 }
 
 resource "aws_service_discovery_service" "this" {
-  count = var.enable_service_discovery ? 1 : 0
+  count = var.create_ecs_service && var.enable_service_discovery ? 1 : 0
   name  = var.app_name
 
   dns_config {

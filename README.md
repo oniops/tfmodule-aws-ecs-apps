@@ -47,9 +47,7 @@ module "app" {
   repository_url        = "<ecr-url>"
 }
 ```
- 
- 
+
 ## Input Variables
- 
 
 ## Output Values

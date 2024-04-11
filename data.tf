@@ -2,8 +2,6 @@ locals {
   namespace_domain_name = var.namespace_domain_name != null ? var.namespace_domain_name : var.context.pri_domain
 }
 
-data "aws_caller_identity" "current" {}
-
 data "aws_ecs_cluster" "this" {
   cluster_name = var.cluster_name
 }

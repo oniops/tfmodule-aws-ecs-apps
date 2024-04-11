@@ -1,7 +1,8 @@
 locals {
   # from context
-  tags                          = var.context.tags
+  account_id                    = var.context.account_id
   name_prefix                   = var.context.name_prefix
+  tags                          = var.context.tags
   # ECS Service
   app_name                      = var.fullname == null ? format("%s-%s", local.name_prefix, var.app_name) : var.fullname
   service_name                  = format("%s-ecss", local.app_name)
@@ -24,10 +25,5 @@ locals {
   enable_load_balancer      = local.enable_backend_alb || local.enable_frontend_alb ? true : false
   backend_alb_listener_arn  = concat(aws_lb_listener.this.*.arn, [""])[0]
   frontend_alb_listener_arn = concat(data.aws_lb_listener.front.*.arn, [""])[0]
-  # CodeDeploy
-  enable_code_deploy        = var.enable_code_deploy && !var.enable_service_connect
-  code_deploy_name          = format("%s-cd", local.app_name)
-  code_deploy_grp_name      = format("%s-cdg", local.app_name)
-  account_id                = data.aws_caller_identity.current.account_id
   alb_listener_arn          = var.backend_alb_name != null  ? local.backend_alb_listener_arn : local.frontend_alb_listener_arn
 }

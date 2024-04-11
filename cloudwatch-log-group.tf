@@ -6,4 +6,3 @@ resource "aws_cloudwatch_log_group" "this" {
     create_before_destroy = true
   }
 }
-

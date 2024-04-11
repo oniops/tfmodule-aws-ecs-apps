@@ -2,9 +2,12 @@ locals {
   task_definition_family   = concat( aws_ecs_task_definition.this.*.family, [""])[0]
   task_definition_revision = concat( aws_ecs_task_definition.this.*.revision, [""])[0]
   task_definition          = format("%s:%s", local.task_definition_family, local.task_definition_revision )
+  deployment_controller    = var.enable_service_connect ? "ECS" : var.deployment_controller
+  enable_default_tg        = local.deployment_controller == "ECS" ? true : false
 }
 
 resource "aws_ecs_service" "this" {
+  count                             = var.create_ecs_service ? 1 : 0
   name                              = local.service_name
   cluster                           = data.aws_ecs_cluster.this.id
   task_definition                   = local.task_definition
@@ -17,7 +20,7 @@ resource "aws_ecs_service" "this" {
 
   dynamic "capacity_provider_strategy" {
     # Set by task set if deployment controller is external
-    for_each = { for k, v in var.capacity_provider_strategy : k => v if var.capacity_provider_strategy != null }
+    for_each = {for k, v in var.capacity_provider_strategy : k => v if var.capacity_provider_strategy != null}
 
     content {
       base              = try(capacity_provider_strategy.value.base, null)
@@ -27,7 +30,7 @@ resource "aws_ecs_service" "this" {
   }
 
   deployment_controller {
-    type = local.enable_code_deploy ? "CODE_DEPLOY" : var.deployment_controller
+    type = local.enable_load_balancer ? local.deployment_controller : null
   }
 
   dynamic "load_balancer" {
