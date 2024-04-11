@@ -328,10 +328,15 @@ variable "propagate_tags" {
 }
 
 # AWS Load-Balancer
-
 variable "frontend_alb_name" {
   description = "Frontend ALB name"
   type        = string
+  default     = null
+}
+
+variable "priority" {
+  description = "ALB listener rule priority"
+  type        = number
   default     = null
 }
 
