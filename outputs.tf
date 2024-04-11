@@ -1,3 +1,49 @@
+output "cluster_id" {
+  description = "ID of the ECS Cluster"
+  value       = data.aws_ecs_cluster.this.id
+}
+
+output "cluster_name" {
+  description = "The name of the ECS Cluster"
+  value       = var.cluster_name
+}
+
+output "task_definition_id" {
+  description = "ID of the ECS Task Definition"
+  value       = concat(aws_ecs_task_definition.this.*.id, [""])[0]
+}
+
+output "task_definition_family" {
+  description = "ID of the ECS Task Definition"
+  value       = concat(aws_ecs_task_definition.this.*.family, [""])[0]
+}
+
+output "task_definition_revision" {
+  description = "ID of the ECS Task Definition"
+  value       = concat(aws_ecs_task_definition.this.*.revision, [""])[0]
+}
+
+output "service_id" {
+  description = "ID of the ECS Application Service"
+  value       = concat(aws_ecs_service.this.*.id, [""])[0]
+}
+
+output "service_name" {
+  description = "The name of the ECS Application Service"
+  value       = local.service_name
+}
+
+output "container_name" {
+  description = "The name of the ECS Application Container"
+  value       = local.container_name
+}
+
+output "repository_url" {
+  value = local.create_ecr_repository ? try(aws_ecr_repository.this[0].repository_url, "") : local.repository_url
+}
+
+
+###
 output "ecs_cluster_id" {
   description = "ID of the ECS Cluster"
   value       = data.aws_ecs_cluster.this.id

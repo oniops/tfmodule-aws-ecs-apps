@@ -3,7 +3,7 @@ locals {
   tags                          = var.context.tags
   name_prefix                   = var.context.name_prefix
   # ECS Service
-  app_name                      = var.app_fullname == null ? format("%s-%s", local.name_prefix, var.app_name) : var.app_fullname
+  app_name                      = var.fullname == null ? format("%s-%s", local.name_prefix, var.app_name) : var.fullname
   service_name                  = format("%s-ecss", local.app_name)
   container_name                = format("%s-ecsc", local.app_name)
   cloudwatch_log_group_name     = var.cloudwatch_log_group_name != null ? var.cloudwatch_log_group_name : format("/ecs/%s", local.service_name)
