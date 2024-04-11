@@ -368,6 +368,11 @@ variable "health_check_path" {
   default     = "/health"
 }
 
+variable "health_check_matcher" {
+  type    = string
+  default = null
+}
+
 variable "health_check_protocol" {
   description = "Destination for the health check protol. Required for HTTP / TCP"
   type        = string

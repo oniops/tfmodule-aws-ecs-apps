@@ -4,13 +4,12 @@ locals {
   tg_name_default       = format("%s-%s-tg", var.context.project, var.app_name)
   load_balancer_type    = try(data.aws_lb.this[0].load_balancer_type, "application")
   listener_protocol     = local.load_balancer_type == "application" ? "HTTP" : "TCP"
-  health_check_path     = var.health_check_path # local.load_balancer_type == "application" ? var.health_check_path : ""
   health_check_protocol = var.health_check_protocol != null ? var.health_check_protocol : local.listener_protocol
-  enable_default_tg     = local.enable_load_balancer && var.enable_service_connect && !local.enable_code_deploy
+  health_check_path     = local.health_check_protocol == "TCP" ? null : var.health_check_path
 }
 
 resource "aws_lb_target_group" "this" {
-  count       = local.enable_default_tg ? 1 : 0
+  count       = var.create_ecs_service && local.enable_load_balancer && local.deployment_controller == "ECS" ? 1 : 0
   name        = local.tg_name_default
   port        = var.task_port
   protocol    = local.listener_protocol
@@ -20,7 +19,8 @@ resource "aws_lb_target_group" "this" {
   health_check {
     enabled             = true
     protocol            = local.health_check_protocol
-    path                = var.health_check_path
+    path                = local.health_check_path
+    matcher             = var.health_check_matcher
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
   }
@@ -35,13 +35,13 @@ resource "aws_lb_target_group" "this" {
 
   tags = merge(
     local.tags,
-    { Name = local.enable_default_tg }
+    { Name = local.tg_name_default }
   )
 
 }
 
 resource "aws_lb_target_group" "blue" {
-  count       = local.enable_code_deploy ? 1 : 0
+  count       = var.create_ecs_service && local.enable_load_balancer && local.deployment_controller == "CODE_DEPLOY" ? 1 : 0
   name        = local.tg_name_blue
   port        = var.task_port
   protocol    = local.listener_protocol
@@ -51,7 +51,8 @@ resource "aws_lb_target_group" "blue" {
   health_check {
     enabled             = true
     protocol            = local.health_check_protocol
-    path                = var.health_check_path
+    path                = local.health_check_path
+    matcher             = var.health_check_matcher
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
   }
@@ -72,7 +73,7 @@ resource "aws_lb_target_group" "blue" {
 }
 
 resource "aws_lb_target_group" "green" {
-  count       = local.enable_code_deploy ? 1 : 0
+  count       = var.create_ecs_service && local.enable_load_balancer && local.deployment_controller == "CODE_DEPLOY" ? 1 : 0
   name        = local.tg_name_green
   port        = var.task_port
   protocol    = local.listener_protocol
@@ -83,6 +84,7 @@ resource "aws_lb_target_group" "green" {
     enabled             = true
     protocol            = local.health_check_protocol
     path                = local.health_check_path
+    matcher             = var.health_check_matcher
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
   }
