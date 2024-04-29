@@ -242,6 +242,12 @@ variable "tags" {
   default     = {}
 }
 
+variable "ecs_tags" {
+  description = "A map of tags to add to ecs service"
+  type        = map(string)
+  default     = {}
+}
+
 # ECS Service
 
 variable "launch_type" {
