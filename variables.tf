@@ -389,6 +389,11 @@ variable "health_check_matcher" {
   default = null
 }
 
+variable "health_check_interval" {
+  type    = number
+  default = null
+}
+
 variable "health_check_protocol" {
   description = "Destination for the health check protol. Required for HTTP / TCP"
   type        = string

@@ -1,8 +1,8 @@
 locals {
-  tg_name_blue          = format("%s-%s-blue-tg", var.context.project, var.app_name)
-  tg_name_green         = format("%s-%s-green-tg", var.context.project, var.app_name)
-  tg_name_default       = format("%s-%s-tg", var.context.project, var.app_name)
-  load_balancer_type    = try(data.aws_lb.this[0].load_balancer_type, "application")
+  tg_name_blue = format("%s-%s-blue-tg", var.context.project, var.app_name)
+  tg_name_green = format("%s-%s-green-tg", var.context.project, var.app_name)
+  tg_name_default = format("%s-%s-tg", var.context.project, var.app_name)
+  load_balancer_type = try(data.aws_lb.this[0].load_balancer_type, "application")
   listener_protocol     = local.load_balancer_type == "application" ? "HTTP" : "TCP"
   health_check_protocol = var.health_check_protocol != null ? var.health_check_protocol : local.listener_protocol
   health_check_path     = local.health_check_protocol == "TCP" ? null : var.health_check_path
@@ -21,6 +21,7 @@ resource "aws_lb_target_group" "this" {
     protocol            = local.health_check_protocol
     path                = local.health_check_path
     matcher             = var.health_check_matcher
+    interval            = var.health_check_interval
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
   }
@@ -53,6 +54,7 @@ resource "aws_lb_target_group" "blue" {
     protocol            = local.health_check_protocol
     path                = local.health_check_path
     matcher             = var.health_check_matcher
+    interval            = var.health_check_interval
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
   }
@@ -85,6 +87,7 @@ resource "aws_lb_target_group" "green" {
     protocol            = local.health_check_protocol
     path                = local.health_check_path
     matcher             = var.health_check_matcher
+    interval            = var.health_check_interval
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
   }
