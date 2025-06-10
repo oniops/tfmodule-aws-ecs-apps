@@ -5,8 +5,8 @@ locals {
   tags                          = var.context.tags
   # ECS Service
   app_name                      = var.fullname == null ? format("%s-%s", local.name_prefix, var.app_name) : var.fullname
-  service_name                  = format("%s-ecss", local.app_name)
-  container_name                = format("%s-ecsc", local.app_name)
+  service_name                  = var.service_name != null ? var.service_name :  "${local.app_name}-ecss"
+  container_name                = var.container_name != null ? var.container_name : "${local.app_name}-ecsc"
   cloudwatch_log_group_name     = var.cloudwatch_log_group_name != null ? var.cloudwatch_log_group_name : format("/ecs/%s", local.service_name)
   service_connect_configuration = var.service_connect_configuration != null ? var.service_connect_configuration : {
     service = {

@@ -3,6 +3,18 @@ variable "create_ecs_service" {
   default = true
 }
 
+variable "service_name" {
+  description = "ecs application service name"
+  type        = string
+  default = null
+}
+
+variable "container_name" {
+  description = "ecs application container name"
+  type        = string
+  default = null
+}
+
 ### ECS Cluster
 variable "cluster_name" {
   description = "ecs cluster name"
