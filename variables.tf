@@ -245,7 +245,7 @@ variable "enable_cloudwatch_log_group" {
 variable "retention_in_days" {
   description = "cloudwatch log group retention_in_days"
   type        = number
-  default     = 90
+  default     = 14
 }
 
 variable "tags" {
