@@ -195,10 +195,68 @@ variable "readonlyRootFilesystem" {
   default     = null
 }
 
+variable "repositoryCredentials" {
+  type        = map(string)
+  default     = null
+  description = <<-EOF
+The private repository authentication credentials to use.
+
+  ex)
+    repositoryCredentials = {
+      credentialsParameter = "arn:aws:secretsmanager:ap-northeast-2:111122223333:secret:secret-name"
+    }
+EOF
+}
+
+variable "volume" {
+  type = list(any)
+  default = []
+  description =<<-EOF
+List of objects defining which Docker or EFS volumes are available to containers
+
+  ex)
+   volumes = [
+    {
+      name      = "app-logs"
+      host_path = "/app/logs"
+    },
+    {
+      name      = "tmp-files"
+      host_path = "tmp"
+    },
+    docker_volume_configuration = {
+      autoprovision = bool
+      driver        = string
+      driver_opts   = map(string)
+      labels        = map(string)
+      scope         = string
+    },
+    efs_volume_configuration = {
+      file_system_id = string
+      root_directory = string
+    }
+  ]
+EOF
+}
+
 variable "mountPoints" {
-  description = "mountPoints"
   type        = list(any)
   default     = []
+  description =<<-EOF
+List of mountPoints for volume
+
+  ex)
+    mountPoints = [
+      {
+        containerPath = "/app/logs"
+        readOnly = false
+      },
+      {
+        containerPath = "/tmp"
+        readOnly = false
+      }
+    ]
+EOF
 }
 
 variable "logConfiguration" {
@@ -228,7 +286,6 @@ variable "initProcessEnabled" {
   type        = bool
   default     = true
 }
-
 
 variable "cloudwatch_log_group_name" {
   description = "Cloudwatch log group name"
@@ -485,7 +542,6 @@ The ECS Service Connect configuration for this service to discover and connect t
 
 EOF
 }
-
 
 # ECR
 variable "repository" {

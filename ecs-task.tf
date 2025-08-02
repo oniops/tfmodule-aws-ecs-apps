@@ -3,7 +3,7 @@ locals {
 
   logConfiguration = var.enable_cloudwatch_log_group ? length(keys(var.logConfiguration.options)) > 0 ? var.logConfiguration : {
     logDriver = "awslogs"
-    options   = {
+    options = {
       awslogs-group         = local.cloudwatch_log_group_name
       awslogs-region        = var.context.region
       awslogs-stream-prefix = local.service_name
@@ -32,6 +32,7 @@ locals {
       ulimits                = toset(var.ulimits)
       mountPoints            = toset(var.mountPoints)
       readonlyRootFilesystem = var.readonlyRootFilesystem
+      repositoryCredentials  = var.repositoryCredentials
 
       ephemeral_storage = {
         size_in_gib = var.task_ephemeral_storage
@@ -68,9 +69,36 @@ resource "aws_ecs_task_definition" "this" {
     }
   }
 
-  tags = merge(
-    local.tags,
+  dynamic "volume" {
+    for_each = var.volume
+    content {
+      name      = volume.value.name
+      host_path = try(volume.value.host_path, "")
+
+      dynamic "docker_volume_configuration" {
+        for_each = try(volume.value.docker_volume_configuration, null) != null ? [volume.value.docker_volume_configuration] : []
+        content {
+          autoprovision = docker_volume_configuration.value.autoprovision
+          driver        = docker_volume_configuration.value.driver
+          driver_opts   = docker_volume_configuration.value.driver_opts
+          labels        = docker_volume_configuration.value.labels
+          scope         = docker_volume_configuration.value.scope
+        }
+      }
+
+      dynamic "efs_volume_configuration" {
+        for_each = try(volume.value.efs_volume_configuration, null) != null ? [volume.value.efs_volume_configuration] : []
+        content {
+          file_system_id = efs_volume_configuration.value.file_system_id
+          root_directory = efs_volume_configuration.value.root_directory
+        }
+      }
+    }
+  }
+
+  tags = merge(local.tags,
     var.tags,
-    { Name = local.task_definition_name }
-  )
+    {
+      Name = local.task_definition_name
+    })
 }
