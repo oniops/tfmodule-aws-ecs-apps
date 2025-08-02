@@ -281,6 +281,38 @@ variable "logConfiguration" {
   */
 }
 
+variable "linuxParameters" {
+  type        = any
+  default     = null
+  description = <<EOF
+The Linux-specific options that are applied to the container, such as Linux KernelCapabilities.
+see - https://docs.aws.amazon.com/ko_kr/AmazonECS/latest/APIReference/API_LinuxParameters.html
+
+  Ex)
+      linuxParameters = {
+        initProcessEnabled = true
+        tmpfs = [
+          {
+            containerPath = "/tmp"
+            size          = 1024 # size in MiB
+            mountOptions  = ["rw", "noexec", "nosuid"]
+          }
+        ]
+      }
+
+EOF
+  
+  linuxParameters = {
+    tmpfs = [
+      {
+        containerPath = "/tmp"
+        size          = 512 # size in MiB
+        mountOptions  = ["rw", "noexec", "nosuid"]
+      }
+    ]
+  }
+  
+}
 variable "initProcessEnabled" {
   description = "initProcessEnabled"
   type        = bool

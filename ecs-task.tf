@@ -40,7 +40,7 @@ locals {
 
       logConfiguration = local.logConfiguration
 
-      linuxParameters = {
+      linuxParameters = var.linuxParameters != null ? var.linuxParameters : {
         initProcessEnabled = var.initProcessEnabled
       }
     }
