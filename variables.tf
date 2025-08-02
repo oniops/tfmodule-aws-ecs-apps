@@ -299,20 +299,10 @@ see - https://docs.aws.amazon.com/ko_kr/AmazonECS/latest/APIReference/API_LinuxP
           }
         ]
       }
-
 EOF
-  
-  linuxParameters = {
-    tmpfs = [
-      {
-        containerPath = "/tmp"
-        size          = 512 # size in MiB
-        mountOptions  = ["rw", "noexec", "nosuid"]
-      }
-    ]
-  }
-  
+
 }
+
 variable "initProcessEnabled" {
   description = "initProcessEnabled"
   type        = bool
