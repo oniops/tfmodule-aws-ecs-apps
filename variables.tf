@@ -283,7 +283,9 @@ variable "logConfiguration" {
 
 variable "linuxParameters" {
   type        = any
-  default     = null
+  default     = {
+    initProcessEnabled = true
+  }
   description = <<EOF
 The Linux-specific options that are applied to the container, such as Linux KernelCapabilities.
 see - https://docs.aws.amazon.com/ko_kr/AmazonECS/latest/APIReference/API_LinuxParameters.html

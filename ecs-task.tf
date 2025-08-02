@@ -33,16 +33,13 @@ locals {
       mountPoints            = toset(var.mountPoints)
       readonlyRootFilesystem = var.readonlyRootFilesystem
       repositoryCredentials  = var.repositoryCredentials
+      logConfiguration       = local.logConfiguration
+      linuxParameters        = var.linuxParameters
 
       ephemeral_storage = {
         size_in_gib = var.task_ephemeral_storage
       }
 
-      logConfiguration = local.logConfiguration
-
-      linuxParameters = var.linuxParameters != null ? var.linuxParameters : {
-        initProcessEnabled = var.initProcessEnabled
-      }
     }
   ]
 
